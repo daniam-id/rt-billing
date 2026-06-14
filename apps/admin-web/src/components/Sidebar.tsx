@@ -7,7 +7,7 @@ import { useAuthStore } from '@/context/useAuthStore';
 import { Button } from './ui';
 
 const TABS = [
-  { href: '/', label: 'Dashboard' },
+  { href: '/dashboard', label: 'Dashboard' },
   { href: '/households', label: 'Households' },
   { href: '/invoices', label: 'Invoices & Rates' },
   { href: '/ledger', label: 'Transaction Ledger' },
@@ -52,7 +52,7 @@ export function Sidebar({ mobileOpen, onClose }: SidebarProps) {
       <nav className="flex-1 overflow-y-auto px-2 py-3" aria-label="Primary">
         <ul className="space-y-0.5">
           {TABS.map((t) => {
-            const active = t.href === '/' ? pathname === '/' : pathname.startsWith(t.href);
+            const active = t.href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(t.href);
             return (
               <li key={t.href}>
                 <Link

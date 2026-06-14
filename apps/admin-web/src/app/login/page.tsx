@@ -19,7 +19,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (ready && token) router.replace('/');
+    if (ready && token) router.replace('/dashboard');
   }, [ready, token, router]);
 
   async function onSubmit(e: React.FormEvent) {
@@ -32,7 +32,7 @@ export default function LoginPage() {
         password,
       });
       setSession(res.data.data.token, res.data.data.user);
-      router.replace('/');
+      router.replace('/dashboard');
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
