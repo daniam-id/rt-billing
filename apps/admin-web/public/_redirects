@@ -1,0 +1,3 @@
+# SPA fallback: serve index.html for any non-asset route
+# Required because Next.js with output: 'export' uses client-side routing.
+/*    /index.html   200
