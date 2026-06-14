@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { api, getErrorMessage } from '@/lib/axios';
-import { useAuthStore, AuthUser } from '@/context/useAuthStore';
+import { useHydratedAuth, AuthUser } from '@/context/useAuthStore';
 
 interface LoginResponse {
   token: string;
@@ -12,17 +12,15 @@ interface LoginResponse {
 
 export default function LoginPage() {
   const router = useRouter();
-  const setSession = useAuthStore((s) => s.setSession);
-  const token = useAuthStore((s) => s.token);
-  const hydrated = useAuthStore((s) => s.hydrated);
+  const { ready, token, setSession } = useHydratedAuth();
   const [username, setUsername] = useState('admin');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (hydrated && token) router.replace('/');
-  }, [hydrated, token, router]);
+    if (ready && token) router.replace('/');
+  }, [ready, token, router]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -40,6 +38,14 @@ export default function LoginPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  if (!ready) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-surface text-sm text-text-muted">
+        Loading…
+      </main>
+    );
   }
 
   return (

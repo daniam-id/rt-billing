@@ -2,19 +2,18 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/context/useAuthStore';
+import { useHydratedAuth } from '@/context/useAuthStore';
 import { Navbar } from './Navbar';
 
 export function ProtectedShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const token = useAuthStore((s) => s.token);
-  const hydrated = useAuthStore((s) => s.hydrated);
+  const { ready, token } = useHydratedAuth();
 
   useEffect(() => {
-    if (hydrated && !token) router.replace('/login');
-  }, [hydrated, token, router]);
+    if (ready && !token) router.replace('/login');
+  }, [ready, token, router]);
 
-  if (!hydrated) {
+  if (!ready) {
     return (
       <div className="min-h-screen flex items-center justify-center text-sm text-text-muted">
         Loading session…

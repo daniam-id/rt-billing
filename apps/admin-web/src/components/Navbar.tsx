@@ -17,7 +17,6 @@ export function Navbar() {
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
   const clear = useAuthStore((s) => s.clear);
-
   function logout() {
     clear();
     router.replace('/login');
