@@ -10,6 +10,7 @@
 |------|-------|---------|
 | 2026-06-14 | Planning | PRD finalized, ARCHITECTURE.md written, rt-billing-mvp.md plan created |
 | 2026-06-14 | Init | technical_overview.md, AGENTS.md, PROGRESS.md created |
+| 2026-06-14 | Refactor | Replaced top Navbar with fixed left Sidebar (w-64) + scrollable main area; mobile slide-out sheet |
 
 ---
 
@@ -33,6 +34,7 @@
 - [x] **Task 7: Meter Editor + Households** — inline MeterEditor for PDAM rows (client+server validation), HouseholdTable with create/edit/delete modal, `/households` page
 - [x] **Task 8: Docker Compose + Dockerfiles** — root multi-stage Dockerfile (api + nginx-served static web), `docker-compose.yml` with postgres+api+web healthchecks, nginx.conf for SPA routing, `.dockerignore` files
 - [x] **Task 9: Navbar + Polish + Route Guards** — Navbar with active-tab highlight + logout, `(app)` route group with ProtectedShell, ErrorBoundary in root layout, `/invoices` and `/ledger` pages
+- [x] **Refactor: Sidebar Layout** — Replaced top Navbar with fixed left Sidebar (`w-64 h-screen`, `bg-canvas border-r border-border`), scrollable `<main>` on the right, mobile slide-out sheet via hamburger. Active route uses `bg-blue-50` + 3px brand left bar. User/Logout pinned to bottom of sidebar. Files: `Sidebar.tsx` (new), `ProtectedShell.tsx` (rewritten), `Navbar.tsx` (deleted).
 
 ### Adaptations for sandbox (no Docker, no Postgres)
 - Switched Prisma datasource to **SQLite** for dev (zero-install). Production still uses Postgres via docker-compose — change `provider` back to `"postgresql"` and run with Docker.
