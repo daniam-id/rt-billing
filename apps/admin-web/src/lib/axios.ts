@@ -2,13 +2,21 @@
 
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/context/useAuthStore';
+import { demoAdapter } from './demoAdapter';
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
+const isDemo = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+
+if (isDemo && typeof window !== 'undefined') {
+  // eslint-disable-next-line no-console
+  console.info('%c[Demo Mode] API calls are intercepted and served from localStorage.', 'color:#2563EB;font-weight:bold');
+}
 
 export const api = axios.create({
   baseURL,
   timeout: 15000,
   headers: { 'Content-Type': 'application/json' },
+  adapter: isDemo ? demoAdapter : undefined,
 });
 
 // Inject Bearer token on every request
