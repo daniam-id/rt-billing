@@ -1,0 +1,56 @@
+name: rt-billing
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: rt-billing-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rtbilling
+      POSTGRES_PASSWORD: rtbilling
+      POSTGRES_DB: rtbilling
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rtbilling -d rtbilling"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api-server:
+    build:
+      context: .
+      dockerfile: apps/api-server/Dockerfile
+    container_name: rt-billing-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_URL: postgresql://rtbilling:rtbilling@postgres:5432/rtbilling?schema=public
+      JWT_SECRET: ${JWT_SECRET:-please-change-this-in-production-very-long-secret}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "3001:3001"
+    command: sh -c "npx prisma migrate deploy && npx prisma db seed && node dist/index.js"
+
+  admin-web:
+    build:
+      context: .
+      dockerfile: apps/admin-web/Dockerfile
+    container_name: rt-billing-web
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-server
+
+volumes:
+  pgdata:

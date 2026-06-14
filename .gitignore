@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# AI dev environment (local tooling, not for repo)
+.agents/
+
+# Build artifacts
+dist/
+.next/
+out/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Testing
+coverage/
+.nyc_output/
+
+# Prisma
+apps/api-server/prisma/migrations/dev.db*
+apps/api-server/prisma/dev.db
+apps/api-server/prisma/dev.db-journal
+
+# Next.js
+apps/admin-web/.next/
+apps/admin-web/out/
+apps/admin-web/next-env.d.ts
+
+# Docker
+*.pid

@@ -1,0 +1,22 @@
+{
+  "name": "rt-billing",
+  "version": "0.1.0",
+  "private": true,
+  "description": "RT-Billing admin dashboard monorepo",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm -ws --parallel run dev",
+    "build": "npm -ws run build",
+    "lint": "npm -ws run lint",
+    "typecheck": "npm -ws run typecheck",
+    "clean": "npm -ws exec rm -rf node_modules dist .next"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@rt-billing/admin-web": "^0.1.0"
+  }
+}

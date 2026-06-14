@@ -1,0 +1,73 @@
+// RT-Billing Prisma Schema
+// Dev: SQLite (zero-install). Prod: switch provider to "postgresql" + Docker.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  fullName     String?
+  role         String   @default("admin")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Household {
+  id           String   @id @default(cuid())
+  houseNumber  String   @unique
+  headOfFamily String
+  phone        String?
+  address      String?
+  status       String   @default("Active") // "Active" | "Vacant"
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  billRecords BillRecord[]
+
+  @@index([status])
+}
+
+model BillType {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  chargeType  String   // "Flat" | "Variable"
+  ratePerUnit Decimal
+  unit        String?
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  billRecords BillRecord[]
+}
+
+model BillRecord {
+  id            String   @id @default(cuid())
+  householdId   String
+  billTypeId    String
+  periodMonth   String   // "YYYY-MM"
+  totalAmount   Decimal  @default(0)
+  initialMeter  Int?
+  finalMeter    Int?
+  paymentStat   String   @default("Pending") // "Paid" | "Pending" | "Overdue"
+  paidAt        DateTime?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  household Household @relation(fields: [householdId], references: [id], onDelete: Restrict)
+  billType  BillType  @relation(fields: [billTypeId], references: [id], onDelete: Restrict)
+
+  @@unique([householdId, billTypeId, periodMonth])
+  @@index([householdId, periodMonth, paymentStat])
+  @@index([periodMonth])
+}
